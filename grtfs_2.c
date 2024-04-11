@@ -174,13 +174,48 @@ unsigned int grtfs_write( unsigned int file_descriptor,
                         char *buffer,
                         unsigned int byte_count ){
 
-  if( grtfs_check_fd_in_range( file_descriptor ) ) {
-    if( grtfs_check_file_is_open( file_descriptor ) ) {
-      for (int i = 0; i < byte_count; ++i) {
-         = buffer[i];
-      }
+    unsigned char curr_block = directory[file_descriptor].first_block;
+    directory[file_descriptor].size += byte_count;
+    unsigned short byte_offset = directory[file_descriptor].byte_offset;
+    unsigned int bytes_transferred = 0;
+    unsigned int bytes_remaining = 0;
+
+    //if (block != free) -> add as many bytes as possible
+    //make new blocks to hold the rest of the bytes
+    if (curr_block == FREE) {
+        unsigned int new_block = grtfs_new_block();
+        file_allocation_table[new_block] = LAST_BLOCK;
+        directory[file_descriptor].first_block = new_block; 
     }
-  }
+    else  {
+        //go to last block in FAT
+        while (file_allocation_table[curr_block] != LAST_BLOCK) {
+            curr_block = file_allocation_table[curr_block];
+        }
+        //calculate the amount of remaining blocks in the last block
+        bytes_remaining = BLOCK_SIZE - directory[file_descriptor].byte_offset;
+        //write as many bytes as possible to the last block
+        if (bytes_transferred <= bytes_remaining) {
+            for (unsigned int i = (BLOCK_SIZE-bytes_remaining); i < BLOCK_SIZE; ++i) {
+                int bytes_index = (bytes_transferred-bytes_remaining) % BLOCK_SIZE;
+                blocks[curr_block].bytes[bytes_index] = buffer[bytes_transferred];
+            }
+        }
+    }
+    //if there are still bytes to be written after filling up last block
+        //then create new blocks to hold the bytes
+        for (; bytes_transferred < byte_count; ++bytes_transferred) {
+            //create a new block to hold the bytes
+            if ((bytes_transferred-bytes_remaining) % BLOCK_SIZE == 0) {
+                unsigned char prev_block = curr_block;
+                curr_block = grtfs_new_block();
+                file_allocation_table[prev_block] = curr_block;
+                file_allocation_table[curr_block] = LAST_BLOCK;
+            }
+            //add the bytes to the new block
+            int bytes_index = (bytes_transferred-bytes_remaining) % BLOCK_SIZE;
+            blocks[curr_block].bytes[bytes_index] = buffer[bytes_transferred];
+        }
 
 }
 
