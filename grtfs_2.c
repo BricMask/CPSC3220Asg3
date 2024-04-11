@@ -8,7 +8,7 @@
 
 
 
-/* tfs_delete()
+/* grtfs_delete()
  *
  * deletes a closed directory entry having the given file descriptor
  *   (changes the status of the entry to unused) and releases all
@@ -28,26 +28,28 @@
  */
 
 unsigned int grtfs_delete( unsigned int file_descriptor ){
-  if (grtfs_check_fd_in_range( file_descriptor )) {
-    return FALSE;
-  }
-  if (directory[file_descriptor].status == CLOSED) {
-    return FALSE;
-  }
+ // if (directory[file_descriptor].status == UNUSED) return FALSE;
 
+  //set directory entry as unused
   directory[file_descriptor].status = UNUSED;
-  
-  unsigned char first_block = directory[file_descriptor].first_block;
-  for (int i = 0; i < directory[file_descriptor].size; ++i) {
-    unsigned char current_block = first_block+i;
-    file_allocation_table[current_block] = FREE;
-  }
 
+  //holds current block of directory entry, starting at its first block
+  unsigned char curr_block = directory[file_descriptor].first_block;
+
+  //loop through the file blocks of the directory entry, freeing them as it goes
+  while (file_allocation_table[curr_block] != LAST_BLOCK) {
+    //temp variable is created that will be deleted
+    //select the next block in the directory entry
+    unsigned char prev_block = curr_block;
+    curr_block = file_allocation_table[curr_block];
+    file_allocation_table[prev_block] = FREE;
+  }
+  //returns true that the file was deleted
   return TRUE;
 }
 
 
-/* tfs_read()
+/* grtfs_read()
  *
  * reads a specified number of bytes from a file starting
  *   at the byte offset in the directory into the specified
@@ -84,40 +86,49 @@ unsigned int grtfs_read( unsigned int file_descriptor,
                        char *buffer,
                        unsigned int byte_count ){
 
-  if (grtfs_check_fd_in_range( file_descriptor )) {
-    return FALSE;
-  }
-  if ( grtfs_check_file_is_open( file_descriptor ) ) {
-    return FALSE;
-  }
+//   if (grtfs_check_fd_in_range( file_descriptor )) {
+//     return FALSE;
+//   }
+//   if ( grtfs_check_file_is_open( file_descriptor ) ) {
+//     return FALSE;
+//   }
 
-  unsigned short byte_offset = directory[file_descriptor].byte_offset;
-  unsigned int bytes_transferred = 0;
 
+    unsigned char curr_block = directory[file_descriptor].first_block;
+    unsigned short byte_offset = directory[file_descriptor].byte_offset;
+    unsigned int bytes_transferred = 0;
+
+    //loop while the amount of bytes gathered is less than the amount of requested bytes
     while (bytes_transferred < byte_count) {
-        for (int i = 0; i < BLOCK_SIZE; ++i) {
+        //loop through the current block
+        for (int byteInBlock = 0; byteInBlock < BLOCK_SIZE; ++byteInBlock) {
 
-            char b = blocks[directory[file_descriptor].first_block].bytes[byte_offset];
+            //select current byte from file block
+            //increment offset to get next byte
+            char curr_byte = blocks[curr_block].bytes[byte_offset];
             byte_offset++;
 
+            //if the end of the file is reached then return
             if (byte_offset >= directory[file_descriptor].size) {
-            return bytes_transferred;
-            } //end of file
-            buffer[i] = b;
+                return bytes_transferred;
+            }
+
+            //add current byte to bytes being gathered
+            buffer[bytes_transferred] = curr_byte;
             bytes_transferred++;
 
+            //return if all desired bytes are gathered
             if (bytes_transferred >= byte_count) {
                 return bytes_transferred;
             }
         }
-
+        //select the next block in the directory entry
+        curr_block = file_allocation_table[curr_block];
     }
-
-  return bytes_transferred;
-
+    return bytes_transferred;
 }
 
-/* tfs_write()
+/* grtfs_write()
  *
  * writes a specified number of bytes from a specified buffer
  *   into a file starting at the byte offset in the directory;
@@ -158,6 +169,7 @@ unsigned int grtfs_read( unsigned int file_descriptor,
  * return value is the number of bytes transferred
  */
 
+
 unsigned int grtfs_write( unsigned int file_descriptor,
                         char *buffer,
                         unsigned int byte_count ){
@@ -169,6 +181,7 @@ unsigned int grtfs_write( unsigned int file_descriptor,
       }
     }
   }
+
 }
 
 bool file_is_readable() {
