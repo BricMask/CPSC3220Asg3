@@ -52,22 +52,25 @@
 
 /* defined sizes and limits */
 
-#define N_DIRECTORY_ENTRIES 16 //16 entries
-#define N_BLOCKS 4096 // 16 entries * 32B ea
-#define BLOCK_SIZE 128 //128B
+// #define N_DIRECTORY_ENTRIES 16 //16 entries
+// #define N_BLOCKS 4096 // 16 entries * 32B ea
+// #define BLOCK_SIZE 128 //128B
+// #define BLOCK_SIZE_AS_POWER_OF_2 7
+// #define N_BYTES (4096*128) //num of blocks * block size
+// #define MAX_FILE_SIZE (4092*128) //blocks containing file data (512-4) * block size
+// #define FILENAME_LENGTH 9
+// #define FIRST_VALID_FD 1
+// #define FIRST_VALID_BLOCK 8
+
+#define N_DIRECTORY_ENTRIES 16
+#define N_BLOCKS 256
+#define BLOCK_SIZE 128
 #define BLOCK_SIZE_AS_POWER_OF_2 7
-#define N_BYTES (4096*128) //num of blocks * block size
-#define MAX_FILE_SIZE (4092*128) //blocks containing file data (512-4) * block size
+#define N_BYTES (256*128)
+#define MAX_FILE_SIZE (252*128)
 #define FILENAME_LENGTH 9
 #define FIRST_VALID_FD 1
 #define FIRST_VALID_BLOCK 4
-
-// #define N_DIRECTORY_ENTRIES 16
-// #define N_BLOCKS 256
-// #define BLOCK_SIZE 128
-// #define BLOCK_SIZE_AS_POWER_OF_2 7
-// #define N_BYTES (256*128)
-// #define MAX_FILE_SIZE (252*128)
 
 
 /* directory entry status */
