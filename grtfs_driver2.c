@@ -53,7 +53,7 @@ int main(){
   grtfs_list_blocks();
 
   grtfs_seek( fd[0], 600 );
-  count3 = tfs_read( fd[0], buffer3, 640 );
+  count3 = grtfs_read( fd[0], buffer3, 640 );
   printf( "%d bytes read from first file\n", count3 );
   buffer3[count3] = '\0';
   printf( "[%s]\n", buffer3 );

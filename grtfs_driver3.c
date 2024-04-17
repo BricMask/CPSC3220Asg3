@@ -68,7 +68,7 @@ int main(){
   printf( "fd for creating a file with identical name" );
   printf( " as existing file - %d\n", fd[2] );
   fd[2] = grtfs_create( "file3" );
-  fd[4] = grtfs_create( "file4" );
+  fd[3] = grtfs_create( "file4" );
   fd[4] = grtfs_create( "file5" );
   fd[5] = grtfs_create( "file6" );
   fd[6] = grtfs_create( "file7" );
@@ -106,6 +106,19 @@ int main(){
 
   grtfs_list_directory();
   grtfs_list_blocks();
+  
+  fd[18] = grtfs_create( "file54" );
+  count1 = grtfs_write( fd[18], buffer1, length1 );
+  printf( "%d bytes written to first file\n", count1 );
+
+  char str[10];
+  for (int i = 19; i < 65; i++) {
+    sprintf(str, "file%d", i);
+    fd[i] = grtfs_create(str);
+    count1 = grtfs_write( fd[i], buffer1, length1 );
+  }
+
+  grtfs_list_directory();
 
   return 0;
 }
@@ -249,14 +262,13 @@ fd for creating a sixteenth file - 0
   fd = 15: file15, currently open, 0 bytes in size
            FAT: no blocks in use
 -- end --
-*** file_descriptor out of range: 0
 -- directory listing --
   fd =  1: unused
   fd =  2: my_file, currently closed, 43 bytes in size
            FAT: 7
   fd =  3: file3, currently open, 0 bytes in size
            FAT: no blocks in use
-  fd =  4: file4, currently open, 0 bytes in size
+  fd =  4: file4, currently closed, 0 bytes in size
            FAT: no blocks in use
   fd =  5: file5, currently closed, 0 bytes in size
            FAT: no blocks in use
@@ -286,7 +298,7 @@ fd for creating a sixteenth file - 0
            FAT: 7
   fd =  3: file3, currently open, 0 bytes in size
            FAT: no blocks in use
-  fd =  4: file4, currently open, 0 bytes in size
+  fd =  4: file4, currently closed, 0 bytes in size
            FAT: no blocks in use
   fd =  5: file5, currently closed, 0 bytes in size
            FAT: no blocks in use

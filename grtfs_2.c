@@ -28,25 +28,28 @@
  */
 
 unsigned int grtfs_delete( unsigned int file_descriptor ){
-  if (directory[file_descriptor].status == UNUSED) return FALSE;
-  if(directory[file_descriptor].first_block == 0) return FALSE;
+//   if (directory[file_descriptor].status == UNUSED) return FALSE;
 
   //set directory entry as unused
   directory[file_descriptor].status = UNUSED;
+
+  //if the directory entry has no allocated blocks then return TRUE
+  if (directory[file_descriptor].first_block == 0) return TRUE;
 
   //holds current block of directory entry, starting at its first block
   unsigned char curr_block = directory[file_descriptor].first_block;
 
   //loop through the file blocks of the directory entry, freeing them as it goes
   while (file_allocation_table[curr_block] != LAST_BLOCK) {
-    printf("\block = %d and points to %d during delte\n\n", curr_block, file_allocation_table[curr_block]);
     //temp variable is created that will be deleted
     //select the next block in the directory entry
     unsigned char prev_block = curr_block;
     curr_block = file_allocation_table[curr_block];
     file_allocation_table[prev_block] = FREE;
   }
+  //deletes the last allocated block
   file_allocation_table[curr_block] = FREE;
+
   //returns true that the file was deleted
   return TRUE;
 }
@@ -89,14 +92,6 @@ unsigned int grtfs_read( unsigned int file_descriptor,
                        char *buffer,
                        unsigned int byte_count ){
 
-//   if (grtfs_check_fd_in_range( file_descriptor )) {
-//     return FALSE;
-//   }
-//   if ( grtfs_check_file_is_open( file_descriptor ) ) {
-//     return FALSE;
-//   }
-
-
     unsigned char curr_block = directory[file_descriptor].first_block;
     unsigned short byte_offset = directory[file_descriptor].byte_offset;
     unsigned int bytes_transferred = 0;
@@ -111,17 +106,18 @@ unsigned int grtfs_read( unsigned int file_descriptor,
             char curr_byte = blocks[curr_block].bytes[byte_offset];
             byte_offset++;
 
-            //if the end of the file is reached then return
-            if (byte_offset >= directory[file_descriptor].size) {
-                return bytes_transferred;
-            }
-
             //add current byte to bytes being gathered
             buffer[bytes_transferred] = curr_byte;
             bytes_transferred++;
 
+            //printf("byteCount= %d\tfdSize= %d\tbytes_trans= %d\tbyteOff= %d\tcurrByte= %c\n",byte_count,directory[file_descriptor].size,bytes_transferred,byte_offset,curr_byte);
+
             //return if all desired bytes are gathered
             if (bytes_transferred >= byte_count) {
+                return bytes_transferred;
+            }
+            //return if the end of the file is reached
+            if (byte_offset >= directory[file_descriptor].size) {
                 return bytes_transferred;
             }
         }
@@ -129,6 +125,20 @@ unsigned int grtfs_read( unsigned int file_descriptor,
         curr_block = file_allocation_table[curr_block];
     }
     return bytes_transferred;
+}
+
+/* grtfs_check_fd_integrity()
+*
+* loops through all directories verifying that none have system errors
+*   if they do then it forces the affected directory to be deemed unused
+*/
+
+void grtfs_check_fd_integrity() {
+    for (unsigned int fd = FIRST_VALID_FD; fd < N_DIRECTORY_ENTRIES; fd++ ) {
+        if ( (directory[fd].status != UNUSED) && (directory[fd].status != OPEN) && (directory[fd].status != CLOSED)) {
+            directory[fd].status = UNUSED;
+        }
+    }
 }
 
 /* grtfs_write()
@@ -172,24 +182,14 @@ unsigned int grtfs_read( unsigned int file_descriptor,
  * return value is the number of bytes transferred
  */
 
-    unsigned char get_new_block_index(unsigned char blk_index)
-{
-    unsigned char prevBlock = blk_index;
-    blk_index = grtfs_new_block();
-    file_allocation_table[prevBlock] = blk_index;
-    file_allocation_table[blk_index] = LAST_BLOCK;
-    return blk_index;
-}
-
-
-
 unsigned int grtfs_write( unsigned int file_descriptor,
                         char *buffer,
                         unsigned int byte_count ){
 
-                            /**
-                             *
-                             */
+                            /***
+                             * test some more
+                             * commit to git
+                            */
 
     unsigned char curr_block = directory[file_descriptor].first_block;
     directory[file_descriptor].size += byte_count;
@@ -197,59 +197,57 @@ unsigned int grtfs_write( unsigned int file_descriptor,
     unsigned int bytes_transferred = 0;
     unsigned int bytes_remaining = 0;
 
-    //if (block != free) -> add as many bytes as possible
-    //make new blocks to hold the rest of the bytes
+    //if the file has no allocated blocks then allocate one towards it
     if (curr_block == FREE) {
         curr_block = grtfs_new_block();
         file_allocation_table[curr_block] = LAST_BLOCK;
-        printf("\block = %d and points to %d during free if statement\n\n", curr_block, file_allocation_table[curr_block]);
         directory[file_descriptor].first_block = curr_block; 
     }
+    //if there are pre-existing allocated blocks then use them as much as possible
     else  {
-        //go to last block in FAT
+        //go to last allocated block
         while (file_allocation_table[curr_block] != LAST_BLOCK) {
             curr_block = file_allocation_table[curr_block];
-            printf("\block = %d and points to %d during while\n\n", curr_block, file_allocation_table[curr_block]);
         }
+
         //calculate the amount of remaining blocks in the last block
         bytes_remaining = BLOCK_SIZE - directory[file_descriptor].byte_offset;
+
         //write as many bytes as possible to the last block
         if (bytes_transferred <= bytes_remaining) {
             for (unsigned int i = (BLOCK_SIZE-bytes_remaining); i < BLOCK_SIZE; ++i) {
-                //int bytes_index = (bytes_transferred-bytes_remaining) % BLOCK_SIZE;
-
                 blocks[curr_block].bytes[i] = buffer[bytes_transferred];
                 bytes_transferred++;
 
+                //if all desired bytes have been written then break out of the loop
                 if (bytes_transferred >= byte_count) {
                     break;
                 }
             }
         }
     }
-    //if there are still bytes to be written after filling up last block
-    //then create new blocks to hold the bytes
-    int bytes_index = 0;
-    printf("bytes_transferred = %d while byte_count = %d\n\n", bytes_transferred, byte_count);
+
+    //if there are still bytes to be written after filling up the last block
+    //then allocate new blocks to hold the bytes
+    int bytes_index = 1;
     for (; bytes_transferred < byte_count; bytes_transferred++) {
-        
-        //create a new block to hold the bytes
+        //allocate a new block to hold the bytes
         if (((bytes_transferred-bytes_remaining) % BLOCK_SIZE == 0) && (bytes_transferred > 0)) {
-            printf("\nlast block had %d bytes\n", bytes_index);
             unsigned char prev_block = curr_block;
             curr_block = grtfs_new_block();
             file_allocation_table[prev_block] = curr_block;
             file_allocation_table[curr_block] = LAST_BLOCK;
-            //printf("\nblock = %d and points to %d during new block creation\n\n", curr_block, file_allocation_table[curr_block]);
         }
         //add the bytes to the new block
         bytes_index = (bytes_transferred-bytes_remaining) % BLOCK_SIZE;
         blocks[curr_block].bytes[bytes_index] = buffer[bytes_transferred];
     }
-    printf("\nlast block had %d bytes\n", bytes_index);
     directory[file_descriptor].byte_offset = bytes_transferred % BLOCK_SIZE;
-    return bytes_transferred;
 
+    //verify that all directories have no system errors
+    grtfs_check_fd_integrity();
+    
+    return bytes_transferred;
 }
 
 bool file_is_readable() {
