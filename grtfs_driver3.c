@@ -47,8 +47,6 @@ int main() {
   count1 = grtfs_write( fd[0], buffer1, length1 );
   printf( "%d bytes written to first file\n", count1 );
 
-  grtfs_close( fd[1] );
-
   grtfs_list_directory();
   grtfs_list_blocks();
 
@@ -185,7 +183,10 @@ int main() {
   grtfs_list_blocks();
 
   grtfs_close( fd[25] );
+<<<<<<< Updated upstream
   grtfs_close( fd[31] );
+=======
+>>>>>>> Stashed changes
   grtfs_close( fd[33] );
 
   grtfs_delete( fd[25] );
@@ -205,18 +206,29 @@ int main() {
 
   grtfs_list_directory();
 
+<<<<<<< Updated upstream
   // grtfs_seek( fd[38], 20 );
   count3 = grtfs_read( fd[38], buffer3, 20 );
+=======
+  grtfs_seek( fd[1], 10 );
+  count3 = grtfs_read( fd[1], buffer3, 20 );
+>>>>>>> Stashed changes
   printf( "%d bytes read from file\n", count3 );
   buffer3[count3] = '\0';
   printf( "[%s]\n", buffer3 );
 
+<<<<<<< Updated upstream
   grtfs_seek( fd[35], 0 );
   count3 = grtfs_read( fd[35], buffer3, 10 );
+=======
+  grtfs_seek( fd[1], 20 );
+  count3 = grtfs_read( fd[1], buffer3, 5 );
+>>>>>>> Stashed changes
   printf( "%d bytes read from file\n", count3 );
   buffer3[count3] = '\0';
   printf( "[%s]\n", buffer3 );
 
+<<<<<<< Updated upstream
   return 0;
 }
 
@@ -425,3 +437,45 @@ fd for creating a sixteenth file - 0
 -- end --
 
 */
+=======
+  grtfs_close( fd[1] );
+
+  grtfs_seek( fd[32], 1 );
+  count3 = grtfs_read( fd[32], buffer3, 42 );
+  printf( "%d bytes read from file\n", count3 );
+  buffer3[count3] = '\0';
+  printf( "[%s]\n", buffer3 );
+
+  count2 = grtfs_write( fd[30], buffer2, length2 );
+  printf( "%d bytes written to file\n", count2 );
+  count2 = grtfs_write( fd[30], buffer2, length2 );
+  printf( "%d bytes written to file\n", count2 );
+
+  grtfs_seek( fd[30], 30 );
+  count3 = grtfs_read( fd[30], buffer3, 25 );
+  printf( "%d bytes read from file\n", count3 );
+  buffer3[count3] = '\0';
+  printf( "[%s]\n", buffer3 );
+
+  grtfs_seek( fd[31], 320 );
+  count3 = grtfs_read( fd[31], buffer3, 42 );
+  printf( "%d bytes read from file\n", count3 );
+  buffer3[count3] = '\0';
+  printf( "[%s]\n", buffer3 );
+
+  grtfs_close( fd[31] );
+
+  grtfs_list_directory();
+
+  grtfs_close( fd[38] );
+  grtfs_close( fd[35] );
+
+  grtfs_delete( fd[38] );
+  grtfs_delete( fd[35] );
+
+  grtfs_list_directory();
+  grtfs_list_blocks();
+
+  return 0;
+}
+>>>>>>> Stashed changes
