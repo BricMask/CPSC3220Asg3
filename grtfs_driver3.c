@@ -183,10 +183,6 @@ int main() {
   grtfs_list_blocks();
 
   grtfs_close( fd[25] );
-<<<<<<< Updated upstream
-  grtfs_close( fd[31] );
-=======
->>>>>>> Stashed changes
   grtfs_close( fd[33] );
 
   grtfs_delete( fd[25] );
@@ -206,238 +202,18 @@ int main() {
 
   grtfs_list_directory();
 
-<<<<<<< Updated upstream
-  // grtfs_seek( fd[38], 20 );
-  count3 = grtfs_read( fd[38], buffer3, 20 );
-=======
   grtfs_seek( fd[1], 10 );
   count3 = grtfs_read( fd[1], buffer3, 20 );
->>>>>>> Stashed changes
   printf( "%d bytes read from file\n", count3 );
   buffer3[count3] = '\0';
   printf( "[%s]\n", buffer3 );
 
-<<<<<<< Updated upstream
-  grtfs_seek( fd[35], 0 );
-  count3 = grtfs_read( fd[35], buffer3, 10 );
-=======
   grtfs_seek( fd[1], 20 );
   count3 = grtfs_read( fd[1], buffer3, 5 );
->>>>>>> Stashed changes
   printf( "%d bytes read from file\n", count3 );
   buffer3[count3] = '\0';
   printf( "[%s]\n", buffer3 );
 
-<<<<<<< Updated upstream
-  return 0;
-}
-
-/* this test driver should print
-
-length of buffer1 is 320
-length of buffer2 is 43
--- directory listing --
-  fd =  1: unused
-  fd =  2: unused
-  fd =  3: unused
-  fd =  4: unused
-  fd =  5: unused
-  fd =  6: unused
-  fd =  7: unused
-  fd =  8: unused
-  fd =  9: unused
-  fd = 10: unused
-  fd = 11: unused
-  fd = 12: unused
-  fd = 13: unused
-  fd = 14: unused
-  fd = 15: unused
--- end --
--- directory listing --
-  fd =  1: file.txt, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd =  2: my_file, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd =  3: unused
-  fd =  4: unused
-  fd =  5: unused
-  fd =  6: unused
-  fd =  7: unused
-  fd =  8: unused
-  fd =  9: unused
-  fd = 10: unused
-  fd = 11: unused
-  fd = 12: unused
-  fd = 13: unused
-  fd = 14: unused
-  fd = 15: unused
--- end --
-320 bytes written to first file
-43 bytes written to second file
-320 bytes written to first file
--- directory listing --
-  fd =  1: file.txt, currently open, 640 bytes in size
-           FAT: 4 5 6 8 9
-  fd =  2: my_file, currently closed, 43 bytes in size
-           FAT: 7
-  fd =  3: unused
-  fd =  4: unused
-  fd =  5: unused
-  fd =  6: unused
-  fd =  7: unused
-  fd =  8: unused
-  fd =  9: unused
-  fd = 10: unused
-  fd = 11: unused
-  fd = 12: unused
-  fd = 13: unused
-  fd = 14: unused
-  fd = 15: unused
--- end --
--- file alllocation table listing of used blocks --
-  block   4 is used and points to   5
-  block   5 is used and points to   6
-  block   6 is used and points to   8
-  block   7 is used and points to   1
-  block   8 is used and points to   9
-  block   9 is used and points to   1
--- end --
-40 bytes read from first file
-[test for the trivial file system code.  ]
-20 bytes read from first file
-[ode.  This is a simp]
-fd for creating a file with identical name as existing file - 0
-fd for creating a sixteenth file - 0
--- directory listing --
-  fd =  1: file.txt, currently open, 640 bytes in size
-           FAT: 4 5 6 8 9
-  fd =  2: my_file, currently closed, 43 bytes in size
-           FAT: 7
-  fd =  3: file3, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd =  4: file4, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd =  5: file5, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd =  6: file6, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd =  7: file7, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd =  8: file8, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd =  9: file9, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd = 10: file10, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd = 11: file11, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd = 12: file12, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd = 13: file13, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd = 14: file14, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd = 15: file15, currently open, 0 bytes in size
-           FAT: no blocks in use
--- end --
--- directory listing --
-  fd =  1: unused
-  fd =  2: my_file, currently closed, 43 bytes in size
-           FAT: 7
-  fd =  3: file3, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd =  4: file4, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd =  5: file5, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd =  6: file6, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd =  7: file7, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd =  8: file8, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd =  9: file9, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd = 10: file10, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd = 11: file11, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd = 12: file12, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd = 13: file13, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd = 14: file14, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd = 15: file15, currently open, 0 bytes in size
-           FAT: no blocks in use
--- end --
-*** file_descriptor out of range: 0
--- directory listing --
-  fd =  1: unused
-  fd =  2: my_file, currently closed, 43 bytes in size
-           FAT: 7
-  fd =  3: file3, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd =  4: file4, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd =  5: file5, currently closed, 0 bytes in size
-           FAT: no blocks in use
-  fd =  6: file6, currently closed, 0 bytes in size
-           FAT: no blocks in use
-  fd =  7: unused
-  fd =  8: unused
-  fd =  9: file9, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd = 10: file10, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd = 11: file11, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd = 12: file12, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd = 13: file13, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd = 14: file14, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd = 15: file15, currently open, 0 bytes in size
-           FAT: no blocks in use
--- end --
--- directory listing --
-  fd =  1: added_1, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd =  2: my_file, currently closed, 43 bytes in size
-           FAT: 7
-  fd =  3: file3, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd =  4: file4, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd =  5: file5, currently closed, 0 bytes in size
-           FAT: no blocks in use
-  fd =  6: file6, currently closed, 0 bytes in size
-           FAT: no blocks in use
-  fd =  7: added_2, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd =  8: unused
-  fd =  9: file9, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd = 10: file10, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd = 11: file11, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd = 12: file12, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd = 13: file13, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd = 14: file14, currently open, 0 bytes in size
-           FAT: no blocks in use
-  fd = 15: file15, currently open, 0 bytes in size
-           FAT: no blocks in use
--- end --
--- file alllocation table listing of used blocks --
-  block   7 is used and points to   1
--- end --
-
-*/
-=======
   grtfs_close( fd[1] );
 
   grtfs_seek( fd[32], 1 );
@@ -478,4 +254,3 @@ fd for creating a sixteenth file - 0
 
   return 0;
 }
->>>>>>> Stashed changes
