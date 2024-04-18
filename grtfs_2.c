@@ -250,18 +250,18 @@ unsigned int grtfs_write( unsigned int file_descriptor,
     return bytes_transferred;
 }
 
-bool file_is_readable() {
-
+bool file_is_readable(unsigned int file_descriptor) {
+    return directory[file_descriptor].read_p;
 }
 
-bool file_is_writable() {
-
+bool file_is_writable(unsigned int file_descriptor) {
+    return directory[file_descriptor].write_p;
 }
 
-void make_readable() {
-
+void make_readable(unsigned int file_descriptor) {
+    directory[file_descriptor].read_p = true;
 }
 
-void make_writable() {
-  
+void make_writable(unsigned int file_descriptor) {
+    directory[file_descriptor].write_p = true;
 }

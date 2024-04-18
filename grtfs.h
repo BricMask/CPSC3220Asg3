@@ -109,6 +109,8 @@ struct directory_entry{
   unsigned char first_block;
   unsigned short size;
   unsigned short byte_offset;
+  bool read_p;
+  bool write_p;
   char name[FILENAME_LENGTH + 1];
 };
 
