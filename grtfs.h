@@ -43,6 +43,7 @@
  * |        | block  |        | offset |                   |
  * +--------+--------+--------+--------+--------------...--+
  */
+
 #ifndef GRTFS
 #define GRTFS
 #include <stdio.h>
@@ -62,17 +63,6 @@
 #define FILENAME_LENGTH 24
 #define FIRST_VALID_FD 1
 #define FIRST_VALID_BLOCK 8
-
-// #define N_DIRECTORY_ENTRIES 16
-// #define N_BLOCKS 256
-// #define BLOCK_SIZE 128
-// #define BLOCK_SIZE_AS_POWER_OF_2 7
-// #define N_BYTES (256*128)
-// #define MAX_FILE_SIZE (252*128)
-// #define FILENAME_LENGTH 9
-// #define FIRST_VALID_FD 1
-// #define FIRST_VALID_BLOCK 4
-
 
 /* directory entry status */
 

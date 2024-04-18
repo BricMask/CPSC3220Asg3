@@ -96,10 +96,10 @@ int main(){
   grtfs_close( fd[6] );
   grtfs_close( fd[7] );
 
-  grtfs_delete( fd[6] );
-  grtfs_delete( fd[7] );
+  // grtfs_delete( fd[6] );
+  // grtfs_delete( fd[7] );
 
-  grtfs_list_directory();
+  // grtfs_list_directory();
 
   fd[16] = grtfs_create( "added_1" );
   fd[17] = grtfs_create( "added_2" );
