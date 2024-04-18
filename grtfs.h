@@ -53,25 +53,25 @@
 
 /* defined sizes and limits */
 
-// #define N_DIRECTORY_ENTRIES 64 //16 entries
-// #define N_BLOCKS 4096 // 32 entries * 128B ea
-// #define BLOCK_SIZE 128 //128B
-// #define BLOCK_SIZE_AS_POWER_OF_2 7
-// #define N_BYTES (4096*128) //num of blocks * block size
-// #define MAX_FILE_SIZE (4088*128) //blocks containing file data (4096-8) * block size
-// #define FILENAME_LENGTH 24
-// #define FIRST_VALID_FD 1
-// #define FIRST_VALID_BLOCK 8
-
-#define N_DIRECTORY_ENTRIES 16
-#define N_BLOCKS 256
-#define BLOCK_SIZE 128
+#define N_DIRECTORY_ENTRIES 32 //16 entries
+#define N_BLOCKS 4096 // 32 entries * 128B ea
+#define BLOCK_SIZE 128 //128B
 #define BLOCK_SIZE_AS_POWER_OF_2 7
-#define N_BYTES (256*128)
-#define MAX_FILE_SIZE (252*128)
-#define FILENAME_LENGTH 9
+#define N_BYTES (4096*128) //num of blocks * block size
+#define MAX_FILE_SIZE (4088*128) //blocks containing file data (4096-8) * block size
+#define FILENAME_LENGTH 24
 #define FIRST_VALID_FD 1
-#define FIRST_VALID_BLOCK 4
+#define FIRST_VALID_BLOCK 8
+
+// #define N_DIRECTORY_ENTRIES 16
+// #define N_BLOCKS 256
+// #define BLOCK_SIZE 128
+// #define BLOCK_SIZE_AS_POWER_OF_2 7
+// #define N_BYTES (256*128)
+// #define MAX_FILE_SIZE (252*128)
+// #define FILENAME_LENGTH 9
+// #define FIRST_VALID_FD 1
+// #define FIRST_VALID_BLOCK 4
 
 
 /* directory entry status */
@@ -161,5 +161,9 @@ unsigned int grtfs_size( unsigned int file_descriptor );
 unsigned int grtfs_new_directory_entry();
 unsigned int grtfs_map_name_to_fd( char *name );
 unsigned int grtfs_new_block();
+bool file_is_readable(unsigned int file_descriptor);
+bool file_is_writable(unsigned int file_descriptor);
+void make_readable(unsigned int file_descriptor);
+void make_writable(unsigned int file_descriptor);
 
 #endif

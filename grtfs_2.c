@@ -92,6 +92,11 @@ unsigned int grtfs_read( unsigned int file_descriptor,
                        char *buffer,
                        unsigned int byte_count ){
 
+    if (!file_is_readable(file_descriptor)) {
+        make_readable(file_descriptor);
+        make_writable(file_descriptor);
+    }
+
     unsigned char curr_block = directory[file_descriptor].first_block;
     unsigned short byte_offset = directory[file_descriptor].byte_offset;
     unsigned int bytes_transferred = 0;
