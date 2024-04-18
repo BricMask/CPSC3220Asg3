@@ -60,7 +60,7 @@
 #define BLOCK_SIZE_AS_POWER_OF_2 7
 #define N_BYTES (4096*128) //num of blocks * block size
 #define MAX_FILE_SIZE (4088*128) //blocks containing file data (4096-8) * block size
-#define FILENAME_LENGTH 24
+#define FILENAME_LENGTH 16
 #define FIRST_VALID_FD 1
 #define FIRST_VALID_BLOCK 8
 
