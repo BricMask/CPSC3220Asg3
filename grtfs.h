@@ -99,6 +99,8 @@ struct directory_entry{
   unsigned char first_block;
   unsigned short size;
   unsigned short byte_offset;
+  bool read_p;
+  bool write_p;
   char name[FILENAME_LENGTH + 1];
 };
 
@@ -149,5 +151,9 @@ unsigned int grtfs_size( unsigned int file_descriptor );
 unsigned int grtfs_new_directory_entry();
 unsigned int grtfs_map_name_to_fd( char *name );
 unsigned int grtfs_new_block();
+bool file_is_readable(unsigned int file_descriptor);
+bool file_is_writable(unsigned int file_descriptor);
+void make_readable(unsigned int file_descriptor);
+void make_writable(unsigned int file_descriptor);
 
 #endif

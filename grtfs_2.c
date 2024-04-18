@@ -92,6 +92,11 @@ unsigned int grtfs_read( unsigned int file_descriptor,
                        char *buffer,
                        unsigned int byte_count ){
 
+    if (!file_is_readable(file_descriptor)) {
+        make_readable(file_descriptor);
+        make_writable(file_descriptor);
+    }
+
     unsigned char curr_block = directory[file_descriptor].first_block;
     unsigned short byte_offset = directory[file_descriptor].byte_offset;
     unsigned int bytes_transferred = 0;
@@ -332,18 +337,18 @@ unsigned int grtfs_write( unsigned int file_descriptor,
     return total_bytes_transferred;
 }
 
-bool file_is_readable() {
-
+bool file_is_readable(unsigned int file_descriptor) {
+    return directory[file_descriptor].read_p;
 }
 
-bool file_is_writable() {
-
+bool file_is_writable(unsigned int file_descriptor) {
+    return directory[file_descriptor].write_p;
 }
 
-void make_readable() {
-
+void make_readable(unsigned int file_descriptor) {
+    directory[file_descriptor].read_p = true;
 }
 
-void make_writable() {
-  
+void make_writable(unsigned int file_descriptor) {
+    directory[file_descriptor].write_p = true;
 }
