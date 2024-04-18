@@ -1,3 +1,4 @@
+// Addison Hough, Brice Maesk
 /* test driver */
 
 #include "grtfs.h"
@@ -68,7 +69,7 @@ int main(){
   printf( "fd for creating a file with identical name" );
   printf( " as existing file - %d\n", fd[2] );
   fd[2] = grtfs_create( "file3" );
-  fd[4] = grtfs_create( "file4" );
+  fd[3] = grtfs_create( "file4" );
   fd[4] = grtfs_create( "file5" );
   fd[5] = grtfs_create( "file6" );
   fd[6] = grtfs_create( "file7" );
