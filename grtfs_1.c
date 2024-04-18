@@ -216,8 +216,6 @@ unsigned int grtfs_create( char *name ){
   directory[file_descriptor].first_block = 0;
   directory[file_descriptor].size = 0;
   directory[file_descriptor].byte_offset = 0;
-  directory[file_descriptor].read_p = false;
-  directory[file_descriptor].write_p = false;
   strcpy( directory[file_descriptor].name, name );
   return( file_descriptor );
 }
